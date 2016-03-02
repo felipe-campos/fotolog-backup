@@ -45,37 +45,47 @@ var http = require('http');
 var request = require('request'),
     cheerio = require('cheerio'),
     fotologName = 'moderaterock',
-    fotologUrl  = 'http://www.fotolog.com/',
-    fotologMosaic = fotologUrl + fotologName + '/mosaic/',
-    fotologArq  = fotologUrl + fotologName + '/arquive/'; // TRASH PROBABLY
+    fotologBaseUrl  = 'http://www.fotolog.com/',
+    fotologMosaicUrl = fotologBaseUrl + fotologName + '/mosaic/';
+//fotologMosaicUrl += '30/';
 
-request(fotologMosaic, (err, resp, body) => {
+request(fotologMosaicUrl, (err, resp, body) => {
 //  console.log('ERR:\n' + err);
 //  console.log('RESP:\n' + resp);
 //  console.log('BODY:\n' + body);
 //  var $ = cheerio.load('#wall_column_left', body),
 //  var $ = cheerio.load('#wall_column_left', 'body', body),
-  var $ = cheerio.load(body),
-      $pagination = $('#pagination'),
-      currentPage = $pagination.children('strong'),
-      pagination = $pagination.get(0);
-//      currentPage = pagination
-//  $pagination = $('#pagination');
-  console.log(currentPage.text());
-//  console.log('\n####################\n$PAGINATION####################');
+  
+  var $ = cheerio.load(body);
+  $.prototype.isLastChild = function () {
+    return (this[0].next) ? false : true;
+  };
+  
+  var $pagination = $('#pagination'),
+      $currentPage = $pagination.children('strong'),
+      // caveat: BEWARE of text nodes, comment nodes etc.
+      pagination = $pagination.get(0);  // TRASH PROBABLY
+
+  console.log($currentPage);
+//  console.log($currentPage.text());
 //  console.log($pagination);
+  console.log('This is the last mosaic page: ' + $currentPage.isLastChild());
+  
+  
+  
+  
 //  console.log('Estamos na página ' + $pagination.find('strong').html() + '.\n');
   
 });
-
-var server = http.createServer( (request, response) => {
-        response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.end('Hello World!\n');
-      } ).listen(8124);
 
 //var server = http.createServer( (request, response) => {
 //        response.writeHead(200, {'Content-Type': 'text/plain'});
 //        response.end('Hello World!\n');
 //      } ).listen(8124);
 
-console.log('Server running at http://127.0.0.1:8124/');
+//var server = http.createServer( (request, response) => {
+//        response.writeHead(200, {'Content-Type': 'text/plain'});
+//        response.end('Hello World!\n');
+//      } ).listen(8124);
+
+//console.log('Server running at http://127.0.0.1:8124/');
