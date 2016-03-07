@@ -46,65 +46,28 @@ var request = require('request'),
     fotologName = 'moderaterock',
     fotologBaseUrl  = 'http://www.fotolog.com/',
     fotologMosaicUrl = fotologBaseUrl + fotologName + '/mosaic/',
-    pictureLinks = [],
-    $, $pagination, $currentPage,
-    previousPage = 0,
-    notLastMosaicPage = true,
-    currentMosaicPagePictureLinks = [];
+    pictureLinks = [];
 
-//fotologMosaicUrl += '30/';
-
-do {
-  //  console.log(fotologMosaicUrl);
-  //  exploring type convertions here
-//  fotologMosaicUrl = (previousPage) ? fotologMosaicUrl + (30 * previousPage) + '/' : fotologMosaicUrl;
-  if (previousPage !== 0) {
-    fotologMosaicUrl += (30 * previousPage) + '/'; // number * string >> string is converted to number before operation
-  }
-  console.log(fotologMosaicUrl);
-  request(fotologMosaicUrl, (err, resp, body) => {
-    
-    $ = cheerio.load(body);
-    $pagination = $('#pagination');
-    $currentPage = $pagination.children('strong');
-    currentMosaicPagePictureLinks = $('.wall_img_container').map((i, el) => {
-      return $(el).prop('href');
-    }).get();
-    
-    // caveat: beware that a text or comment node is also a ‘child’
-//    $.prototype.isNotLastChild = $.prototype.isNotLastChild || function () { 
-//      return (this[0].next) ? true : false;
-//    };
-    
-    Array.prototype.push.apply(pictureLinks, currentMosaicPagePictureLinks);//console.log(pictureLinks);
-    notLastMosaicPage = ($currentPage[0].next) ? true : false;
-    previousPage = $currentPage.html();
-    
-//    console.log('Picture links stored.'); 
-//    aux = $currentPage.isNotLastChild();
-  });
-
-} while (notLastMosaicPage);
-//} while (aux && ($currentPage = $currentPage.html()));
+fotologMosaicUrl += '30/';
 
 
-console.log(pictureLinks);
-
-
-/*
 request(fotologMosaicUrl, (err, resp, body) => {
-  
-  var $ = cheerio.load(body),
-      $pagination = $('#pagination'),
-      $currentPage = $pagination.children('strong');
+  var $ = cheerio.load(body);
   
   $.prototype.isLastChild = function () {  // caveat: a text or comment node is also a ‘child’
     return (this[0].next) ? false : true;
   };
   
+  var $pagination = $('#pagination'),
+      $currentPage = $pagination.children('strong');
+  
   pictureLinks = $('.wall_img_container').map( (i, el) => {
     return $(el).prop('href');
   }).get();
+  
+//  if (!$currentPage.isLasChild()) {
+//    
+//  }
   
 //  function getPictureLinks(arr) {
 //    return Array.prototype.push.apply(arr, )
@@ -113,8 +76,9 @@ request(fotologMosaicUrl, (err, resp, body) => {
   console.log(pictureLinks);
   console.log('This is the last mosaic page: ' + $currentPage.isLastChild());
   
+  
 });
-*/
+
 
 //  console.log('Estamos na página ' + $pagination.find('strong').html() + '.\n');
 //  console.log($mosaicPictureItems);

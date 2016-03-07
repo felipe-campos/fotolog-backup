@@ -48,20 +48,15 @@ var request = require('request'),
     fotologMosaicUrl = fotologBaseUrl + fotologName + '/mosaic/',
     pictureLinks = [],
     $, $pagination, $currentPage,
-    previousPage = 0,
-    notLastMosaicPage = true,
     currentMosaicPagePictureLinks = [];
 
 //fotologMosaicUrl += '30/';
 
 do {
-  //  console.log(fotologMosaicUrl);
-  //  exploring type convertions here
-//  fotologMosaicUrl = (previousPage) ? fotologMosaicUrl + (30 * previousPage) + '/' : fotologMosaicUrl;
-  if (previousPage !== 0) {
-    fotologMosaicUrl += (30 * previousPage) + '/'; // number * string >> string is converted to number before operation
-  }
-  console.log(fotologMosaicUrl);
+  
+  // exploring type convertions here
+  fotologMosaicUrl = ($currentPage) ? fotologMosaicUrl + (30 * $currentPage) + '/' : fotologMosaicUrl; 
+  
   request(fotologMosaicUrl, (err, resp, body) => {
     
     $ = cheerio.load(body);
@@ -72,20 +67,15 @@ do {
     }).get();
     
     // caveat: beware that a text or comment node is also a ‘child’
-//    $.prototype.isNotLastChild = $.prototype.isNotLastChild || function () { 
-//      return (this[0].next) ? true : false;
-//    };
+    $.prototype.isLastChild = $.prototype.isLastChild || function () { 
+      return (this[0].next) ? false : true;
+    };
     
-    Array.prototype.push.apply(pictureLinks, currentMosaicPagePictureLinks);//console.log(pictureLinks);
-    notLastMosaicPage = ($currentPage[0].next) ? true : false;
-    previousPage = $currentPage.html();
-    
-//    console.log('Picture links stored.'); 
-//    aux = $currentPage.isNotLastChild();
+    Array.prototype.push.apply(pictureLinks, currentMosaicPagePictureLinks);
+    console.log('Picture links sored.');
   });
 
-} while (notLastMosaicPage);
-//} while (aux && ($currentPage = $currentPage.html()));
+} while (!$currentPage.isLastChild() && $currentPage = $currentPage.html());
 
 
 console.log(pictureLinks);
