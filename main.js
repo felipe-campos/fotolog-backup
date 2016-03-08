@@ -1,13 +1,3 @@
-//const http = require('http');
-//
-//var server = http.createServer( (request, response) => {
-//        response.writeHead(200, {'Content-Type': 'text/plain'});
-//        response.end('Hello World!\n');
-//      } ).listen(8124);
-//
-//console.log('Server running at http://127.0.0.1:8124/');
-
-
 // Objective: save every post of a given Fotolog, namely:
 // 
 //     - the picture posted
@@ -43,52 +33,44 @@
 
 var request = require('request'),
     cheerio = require('cheerio'),
+    Promise = require('promise'),
+    util = require('util'),   // for debugging only
     fotologName = 'moderaterock',
     fotologBaseUrl  = 'http://www.fotolog.com/',
     fotologMosaicUrl = fotologBaseUrl + fotologName + '/mosaic/',
-    pictureLinks = [],
-    $, $pagination, $currentPage,
-    previousPage = 0,
+    fotologPostsLinks = [],
+    $, $mosaicPagination, $mosaicCurrentPage,
+    mosaicPreviousPage = 0,
     notLastMosaicPage = true,
-    currentMosaicPagePictureLinks = [];
+    mosaicCurrentPagePostsLinks = [];
 
 //fotologMosaicUrl += '30/';
 
 do {
-  //  console.log(fotologMosaicUrl);
-  //  exploring type convertions here
-//  fotologMosaicUrl = (previousPage) ? fotologMosaicUrl + (30 * previousPage) + '/' : fotologMosaicUrl;
-  if (previousPage !== 0) {
-    fotologMosaicUrl += (30 * previousPage) + '/'; // number * string >> string is converted to number before operation
+  if (mosaicPreviousPage !== 0) {
+    mosaicPreviousPage = $mosaicCurrentPage.html();      // a string. will be converted to number
+    fotologMosaicUrl += (30 * mosaicPreviousPage) + '/'; // string is converted to number before operation (number * string)
   }
-  console.log(fotologMosaicUrl);
+//  console.log(fotologMosaicUrl);
   request(fotologMosaicUrl, (err, resp, body) => {
     
     $ = cheerio.load(body);
-    $pagination = $('#pagination');
-    $currentPage = $pagination.children('strong');
-    currentMosaicPagePictureLinks = $('.wall_img_container').map((i, el) => {
+    mosaicCurrentPagePostsLinks = $('.wall_img_container').map((i, el) => {
       return $(el).prop('href');
     }).get();
+    $mosaicPagination = $('#pagination');
+    $mosaicCurrentPage = $mosaicPagination.children('strong');
+    console.log(util.inspect($mosaicCurrentPage));
     
-    // caveat: beware that a text or comment node is also a ‘child’
-//    $.prototype.isNotLastChild = $.prototype.isNotLastChild || function () { 
-//      return (this[0].next) ? true : false;
-//    };
+    Array.prototype.push.apply(fotologPostsLinks, mosaicCurrentPagePostsLinks);
     
-    Array.prototype.push.apply(pictureLinks, currentMosaicPagePictureLinks);//console.log(pictureLinks);
-    notLastMosaicPage = ($currentPage[0].next) ? true : false;
-    previousPage = $currentPage.html();
-    
-//    console.log('Picture links stored.'); 
-//    aux = $currentPage.isNotLastChild();
+//    if ($mosaicCurrentPage[0].next === null) { break mosaic_loop; }
   });
 
-} while (notLastMosaicPage);
-//} while (aux && ($currentPage = $currentPage.html()));
+//} while ($mosaicCurrentPage.next() !== null);
+} while (false);
 
-
-console.log(pictureLinks);
+console.log(fotologPostsLinks);
 
 
 /*
@@ -136,10 +118,3 @@ request(fotologMosaicUrl, (err, resp, body) => {
 //  var $mosaic = $('#list_photos_mosaic');
 
 
-//var http = require('http');
-//var server = http.createServer( (request, response) => {
-//        response.writeHead(200, {'Content-Type': 'text/plain'});
-//        response.end('Hello World!\n');
-//      } ).listen(8124);
-
-//console.log('Server running at http://127.0.0.1:8124/');
