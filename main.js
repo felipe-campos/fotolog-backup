@@ -31,90 +31,74 @@
 // - <Month> and <Day> directories follow the same rule. In other words: there must not be an empty directory in the FS
 
 
-var request = require('request'),
+//    request = require('request'),
+
+console.time('Elapsed time');  // will print elapsed time by calling console.timeEnd() at the end
+
+var fetch = require('node-fetch'),
     cheerio = require('cheerio'),
     Promise = require('promise'),
     util = require('util'),   // for debugging only
     fotologName = 'moderaterock',
+    // fotologName = process.argv[2],
+    // fotologName = 'somos6';
     fotologBaseUrl  = 'http://www.fotolog.com/',
     fotologMosaicUrl = fotologBaseUrl + fotologName + '/mosaic/',
     fotologPostsLinks = [],
-    $, $mosaicPagination, $mosaicCurrentPage,
-    mosaicPreviousPage = 0,
-    notLastMosaicPage = true,
+    $mosaicCurrentPage = {},
+    mosaicPageNumber = 1,
     mosaicCurrentPagePostsLinks = [];
 
-//fotologMosaicUrl += '30/';
 
-do {
-  if (mosaicPreviousPage !== 0) {
-    mosaicPreviousPage = $mosaicCurrentPage.html();      // a string. will be converted to number
-    fotologMosaicUrl += (30 * mosaicPreviousPage) + '/'; // string is converted to number before operation (number * string)
+function getCurrentMosaicPageUrlComplement(pageNumber) {
+  if (pageNumber === 1) {  // initial mosaic page
+    return '';             // doesn’t need complement
   }
-//  console.log(fotologMosaicUrl);
-  request(fotologMosaicUrl, (err, resp, body) => {
+  return (30 * (pageNumber - 1)) + '/';  // e.g. URL for page 2 is http://fotolog.com/<fotologName>/mosaic/30/
+}
+
+function isMosaicLastPage($currentPage) { // expects a cheerio object as argument
+  return ($currentPage[0].next) ? false : true;
+}
+
+
+
+(function getCurMosaicPagePostsLinks() {
     
-    $ = cheerio.load(body);
+  Promise.resolve(fotologMosaicUrl += getCurrentMosaicPageUrlComplement(mosaicPageNumber)).then( mosaicUrl => {
+    fetch(mosaicUrl).then( response => {
+    return response.text();
+  }).then( text => {
+    return cheerio.load(text);
+  }).then( $ => {
+
     mosaicCurrentPagePostsLinks = $('.wall_img_container').map((i, el) => {
       return $(el).prop('href');
     }).get();
-    $mosaicPagination = $('#pagination');
-    $mosaicCurrentPage = $mosaicPagination.children('strong');
-    console.log(util.inspect($mosaicCurrentPage));
-    
-    Array.prototype.push.apply(fotologPostsLinks, mosaicCurrentPagePostsLinks);
-    
-//    if ($mosaicCurrentPage[0].next === null) { break mosaic_loop; }
+
+    $mosaicCurrentPage = Promise.resolve($('#pagination')).then( $pag => {
+      return $pag.children('strong');
+    });
+
+    return Promise.all([mosaicCurrentPagePostsLinks, $mosaicCurrentPage]);
+
+  }).then( values => {
+    Promise.resolve(Array.prototype.push.apply(fotologPostsLinks, values[0])).then( () => {
+      if (isMosaicLastPage(values[1])) {
+        return () => {
+          console.log(fotologPostsLinks);
+          console.timeEnd('Elapsed time');
+        }();
+      } else {
+        mosaicPageNumber++;
+        getCurMosaicPagePostsLinks();
+      }
+    });
+  }).catch( error => {
+//    console.log('FUÉIN!', error);
+      console.err(error.msg);
   });
 
-//} while ($mosaicCurrentPage.next() !== null);
-} while (false);
+  });
 
-console.log(fotologPostsLinks);
-
-
-/*
-request(fotologMosaicUrl, (err, resp, body) => {
-  
-  var $ = cheerio.load(body),
-      $pagination = $('#pagination'),
-      $currentPage = $pagination.children('strong');
-  
-  $.prototype.isLastChild = function () {  // caveat: a text or comment node is also a ‘child’
-    return (this[0].next) ? false : true;
-  };
-  
-  pictureLinks = $('.wall_img_container').map( (i, el) => {
-    return $(el).prop('href');
-  }).get();
-  
-//  function getPictureLinks(arr) {
-//    return Array.prototype.push.apply(arr, )
-//  }
-  
-  console.log(pictureLinks);
-  console.log('This is the last mosaic page: ' + $currentPage.isLastChild());
-  
-});
-*/
-
-//  console.log('Estamos na página ' + $pagination.find('strong').html() + '.\n');
-//  console.log($mosaicPictureItems);
-//  console.log($currentPage);
-//  console.log($currentPage.text());
-//  console.log($relevantContent._root[0].children[0]);
-//  console.log('XXXXXXXXXXXX');
-//  console.log($relevantContent._root[0].children[1]);
-//  console.log($mosaic.children);
-//  console.log($mosaic.children[1]);
-//  console.log($mosaic.children[2]);
-//  console.log($pagination);
-
-
-//      $relevantContent = $('.wall_column_left'),
-//      $mosaicPictureItems = $relevantContent.find('.wall_img_container');
-//      $pagination = $relevantContent.find('#pagination'),
-  
-//  var $mosaic = $('#list_photos_mosaic');
-
-
+})();
