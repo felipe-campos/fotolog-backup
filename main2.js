@@ -33,9 +33,6 @@ function getCurMosaicPagePostsLinks() {
     return ($('.wall_img_container').map( (i, el) => {
       return ($(el).prop('href')).match(re);  // ... store just '12345678/'
     }).get());  // use .get() to return an array with the posts IDs
-//  }).then( IDs => {
-//    // console.log(IDs);
-//    return IDs;
   }).catch( error => {
     console.log('FUÉIN!', error);
   });
