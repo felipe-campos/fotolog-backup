@@ -16,7 +16,7 @@ var fotologName = 'moderaterock',
     // fotologName = 'tubi',
     fotologBaseUrl  = 'http://www.fotolog.com/',
     fotologMosaicUrl = fotologBaseUrl + fotologName + '/mosaic/',
-    fotologPostsLinks = [],
+    fotologPostsLinks,
     mosaicPageNumber = 1;
 
 
@@ -47,7 +47,7 @@ var fotolog = {
   base: 'http://www.fotolog.com/' + this.name,
   //mosaicBaseUrl: this.baseUrl + this.name + '/mosaic/',
   //url: this.base + this.name,  // + '/' ?
-  //numberOfPhotos: ,
+  //howManyPictures: ,
   
   mosaic: {
     
@@ -58,7 +58,7 @@ var fotolog = {
     // cache relevant element
     $: $fetch(this.url),
     
-    getNumberOfPhotos: function() {
+    getHowManyPictures: function() {
       
     }
   }
