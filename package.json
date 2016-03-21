@@ -4,6 +4,7 @@
   "private": true,
   "description": "Backup all pictures from a Fotolog, with respective descriptions and comments.",
   "dependencies": {
+    "async": "^2.0.0-rc.1",
     "cheerio": "~0.20.0",
     "node-fetch": "^1.3.3",
     "request": "~2.67.0"
