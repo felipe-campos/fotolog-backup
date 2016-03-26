@@ -126,34 +126,3 @@ for (let i = 1; i <= mosaic_pages_amount; i++) {
 process.on('exit', _=> {
   console.timeEnd('Elapsed time');
 });
-  
-//function getCurMosaicPagePostsLinks() {
-//  
-//  // `p` will store a Promise that we’ll return
-//  var p = fetch(mosaic_base).then( response => {
-//    return response.text();
-//  }).then( text => { 
-//    return cheerio.load(text);
-//  }).then( $ => {
-//    var re = /\d+\/$/;  // 'http://www.fotolog.com/<fotologName>/12345678/' ...
-//    return ($('.wall_img_container').map( (i, el) => {
-//      // ... store just '12345678/'
-//      return ($(el).prop('href')).match(re);
-//    }).get());  // .get() returns an array with the posts IDs
-//  }).catch( error => {
-//    console.log('FUÉIN!', error);
-//  });
-//  
-//  return p;  // return Promise with array of posts IDs
-//}
-
-//  function get_posts_IDs($el) {
-//    let re = /\d+\/$/;
-//    return $el.map( (i, el) => {
-//      // 'http://www.fotolog.com/<fotologName>/12345678/' ...
-//      //return ($(el).prop('href'))
-//      //return (el.getAttribute('href'))
-//      return (el.attribs.href)
-//        .match(re);  // ... store just '12345678/'
-//    }).get();  // .get() returns an array with the posts IDs
-//  }
