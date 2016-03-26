@@ -1,140 +1,3 @@
-//// will it work?
-//
-//console.time('Elapsed time');
-//
-//const fetch = require('node-fetch'),
-//      cheerio = require('cheerio'),
-//      fs = require('fs'),
-//      request = require('request'),
-//      async = require('async');
-//      // util = require('util');   // for debugging only
-//
-////var fotologName = 'moderaterock',
-////    fotologName = 'citadel',
-////    // fotologName = 'tubi',
-////    fotologBaseUrl  = 'http://www.fotolog.com/',
-////    fotologMosaicUrl = fotologBaseUrl + fotologName + '/mosaic/',
-////    fotologPostsLinks,
-////    mosaicPageNumber = 1;
-//
-//
-//(function() {
-//  
-//  //var base = 'http://www.fotolog.com/moderaterock/';
-//  
-//  var Fotolog = {
-//    
-//    name: 'moderaterock',
-//    //url: 'http://www.fotolog.com/',
-//    url: 'http://www.fotolog.com/moderaterock/',
-//    mosaic: this.url + 'mosaic/',
-//    mosaicLoop: 1,
-//    backupDone: false,
-//    postsAmount: undefined
-//    
-////    backup: function() {
-////      
-//////      var mosaic_01 = new MosaicPage(1),
-//////          $promise = $Fetch(mosaic_01.url);
-////      
-////      var $promise = $Fetch(Fotolog.mosaic);
-////      
-////      $promise.then( $ => {
-////        var container = $('.profile_bar_active').get(0),
-////            $el = $(container).children().first();
-////        Fotolog.postsAmount = parseInt($el.contents());
-////        return console.log(Fotolog.postsAmount);
-////      }).catch( error => {
-////        console.log('Couldn’t get amount of posts.');
-////        console.log(error);
-////      });
-////      
-////    }
-//    
-//  };
-//  
-//  function MosaicPage(page) {
-//    
-//    this.page = page;
-//    //this.base = 'http://www.fotolog.com/moderaterock/mosaic/';
-//    this.base = Fotolog.url + Fotolog.name + '/mosaic/';
-//    this.url = this.base + (30 * (this.page - 1)) + '/';
-//    
-//  }
-//  
-//  function PostPage(id) {
-//    
-//    this.id = id;
-//    this.base = 'http://www.fotolog.com/moderaterock/';
-//    this.url = this.base + id;
-//    
-//  }
-//  
-//  
-//  function Factory() {}
-//  
-//  // By default, Factory creates a PostPage object
-//  Factory.prototype.type = PostPage;
-//  
-//  Factory.prototype.createPage = function(options) {
-//    
-//    switch(options.type) {
-//      case 'post':
-//        this.type = PostPage;
-//        break;
-//      case 'mosaic':
-//        this.type = MosaicPage;
-//        break;
-//    }
-//    
-//    return new this.type(options);
-//  };
-//  
-//  
-//  // fetches `url` and returns a Promise
-//  // to the Cheerio-object-wrapped response
-//  function $Fetch(url) {
-//
-//    var $prom = fetch(url)
-//      .then( response => {
-//        return response.text;
-//      })
-//      .then( text => {
-//        return cheerio.load(text);
-//      })
-//      .catch( err => {
-//        console.log('Error fetching ' + url);
-//        console.log(err);
-//      });
-//
-//    return $prom;
-//  }
-//  
-//  //setTimeout(Fotolog.backup(), 500);
-//  Fotolog.backup = (function() {
-//
-//    var $promise = $Fetch(Fotolog.mosaic);
-//
-//    $promise.then( $ => {
-//      var container = $('.profile_bar_active').get(0),
-//          $el = $(container).children().first();
-//      Fotolog.postsAmount = parseInt($el.contents());
-//      return console.log(Fotolog.postsAmount);
-//    }).catch( error => {
-//      console.log('Couldn’t get amount of posts.');
-//      console.log(error);
-//    });
-//
-//  })();
-//  
-//})();
-//
-//
-//
-//process.on('exit', _=> {
-//  console.timeEnd('Elapsed time');
-//});
-
 'use strict';
 
 console.time('Elapsed time');
@@ -148,11 +11,25 @@ const fetch = require('node-fetch'),
 const fotolog = process.argv[2],
       base  = 'http://www.fotolog.com/' + fotolog + '/',
       posts_amount = +process.argv[3],
-      picture_path = './content/';
+      picture_path = './content/' + fotolog + '/';
 
-let mosaicBase = base+ 'mosaic/',
-    fotologPostsLinks,
-    mosaicPageNumber = 1;
+let mosaic_base = base + 'mosaic/',
+    fotolog_posts_links,
+    mosaic_page_number = 1,
+    // mosaic shows 30 posts per page
+    mosaic_pages_amount = Math.ceil(posts_amount/30);
+
+
+function create_relative_path(picturepath, options) {
+  fs.access(picturepath, err => {
+    if (err) {
+      fs.mkdir(picturepath);
+      return console.log(`Diretório '%s' criado.`, picturepath);
+    } else {
+       return console.log(`Diretório '%s' já existia.`, picturepath);
+    }
+  });
+}
 
 // Fetches URL, wrap it in a Cheerio object and
 // returns a promise to it.
@@ -177,7 +54,7 @@ function mosaic_fetcher(page_number) {
   
   // Given its number, returns the mosaic page URL (e.g 'http://www.fotolog.com/<fotolog_name>/mosaic/30/').
   function set_mosaic_url(page_number) {
-    return mosaicBase + (30 * (page_number - 1)) + '/';
+    return mosaic_base + (30 * (page_number - 1)) + '/';
   }
   
   // Given a Cheerio wrapped mosaic page, returns a Cherrio object
@@ -209,10 +86,6 @@ function mosaic_fetcher(page_number) {
 }
 
 
-//let arr = mosaic_fetcher(mosaicPageNumber);
-//
-//console.log('Porra! arr = ');
-//arr.then( IDs => { console.log(IDs); });
 
 function picture_backup(ID) {
   let url = base + ID,
@@ -225,29 +98,23 @@ function picture_backup(ID) {
   }).then( $ => {
     return $('.wall_img_container_big').children().prop('src');
   }).then( picture_uri => {
-    console.log('downloading ' + picture_uri + '...');
+    console.log('Downloading ' + picture_uri + '...');
     request(picture_uri)
-      .pipe(
-        fs.createWriteStream(
-          picture_path+picture_name
-        )
-      );
-
+      .pipe(fs.createWriteStream(picture_path + picture_name));
   });
 }
 
 
-for (let i = 1; i <= 3; i++) {
+create_relative_path(picture_path);
+
+for (let i = 1; i <= mosaic_pages_amount; i++) {
   
-  //request(picture_uri)
-  //  .pipe(fs.createWriteStream(path+picture_name));
+  mosaic_page_number = i;
   
-  let j =i;
-  
-  let posts_IDs = mosaic_fetcher(j)
+  let posts_IDs = mosaic_fetcher(mosaic_page_number)
     .then( IDs => {
-      mosaicPageNumber += 1;
-      console.log("Parsed mosaic page number %d", mosaicPageNumber);
+      console.log("Parsed mosaic page number %d", mosaic_page_number);
+      mosaic_page_number += 1;
       IDs.forEach(picture_backup);
     }).catch( e => { 
       console.log(e); 
@@ -263,7 +130,7 @@ process.on('exit', _=> {
 //function getCurMosaicPagePostsLinks() {
 //  
 //  // `p` will store a Promise that we’ll return
-//  var p = fetch(mosaicBase).then( response => {
+//  var p = fetch(mosaic_base).then( response => {
 //    return response.text();
 //  }).then( text => { 
 //    return cheerio.load(text);
