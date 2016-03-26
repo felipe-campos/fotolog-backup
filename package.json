@@ -1,6 +1,6 @@
 {
   "name": "fotolog-backup",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "Backup all pictures from a Fotolog, with respective descriptions and comments.",
   "dependencies": {
