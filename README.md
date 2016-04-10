@@ -1,13 +1,37 @@
-## Backup all posts from a given Fotolog: pictures and its respective descriptions and comments.
+# Fotolog Backup
 
-:scream: :spaghetti:
+Backup all posts from a given Fotolog.
 
-WTF list:
+- pictures
+- pictures’ descriptions
+- post date
+- all comments, including its author and date
 
-- main1.js: *should* log an array containing links of all posts of a given Fotolog.
-- main2.js: Gets links of the 30 last posts, fetches one arbitrarily chosen post and downloads its picture to `content/picture.jpg`
-- main3.js: Does nothing. Its just me trying Design Patterns for the 1st time, writing down ideas, but not getting anywhere.
 
----
+## Development
 
-See [Cheerio](https://github.com/cheeriojs/cheerio) for information about its API.
+### Use
+
+`node main <fotolog-name> <total-amount-of-posts>`
+
+Currently, there are 3 hardcoded posts IDs, for development purposes. Therefore, you should use **moderaterock** as the Fotolog. It’s got 60 posts, so run `node main moderaterock 60`.
+
+##### Useful Fotolog Links
+
+- [moderaterock mosaic page](http://www.fotolog.com/moderaterock/mosaic/)
+- [1st hardcoded post](http://www.fotolog.com/moderaterock/14182234/)
+- [2nd hardcoded post](http://www.fotolog.com/moderaterock/10611508/)
+- [3rd hardcoded post](http://www.fotolog.com/moderaterock/10239857/)
+
+### External dependencies
+
+- [request](https://www.npmjs.com/package/request)
+- [node-fetch](https://www.npmjs.com/package/node-fetch)
+- [cheerio](https://github.com/cheeriojs/cheerio)
+
+### To do
+
+- [ ] Finish `backup.js` module
+- [ ] Refactoring
+- [ ] Adress more than 1 post per day
+- [ ] Get total amount of posts automatically
