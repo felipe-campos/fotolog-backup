@@ -2,7 +2,6 @@
 
 ##### Backup all posts from a given Fotolog, i.e. pictures *and* its respective dates, descriptions and comments.
 
----
 
 ## Development
 
@@ -16,11 +15,11 @@ Currently, there are 3 hardcoded posts IDs, for development purposes. Therefore,
 
 - [request](https://www.npmjs.com/package/request)
 - [node-fetch](https://www.npmjs.com/package/node-fetch)
-- [Cheerio](https://github.com/cheeriojs/cheerio)
+- [cheerio](https://github.com/cheeriojs/cheerio)
 
 ### To do
 
-- [] Finish `backup.js` module
-- [] Refactoring
-- [] Adress more than 1 post per day
-- [] Get total amount of posts automatically
+- [ ] Finish `backup.js` module
+- [ ] Refactoring
+- [ ] Adress more than 1 post per day
+- [ ] Get total amount of posts automatically
