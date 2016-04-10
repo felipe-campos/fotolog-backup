@@ -1,6 +1,11 @@
 # Fotolog Backup
 
-##### Backup all posts from a given Fotolog, i.e. pictures *and* its respective dates, descriptions and comments.
+Backup all posts from a given Fotolog.
+
+- pictures
+- pictures’ descriptions
+- post date
+- all comments, including its author and date
 
 
 ## Development
