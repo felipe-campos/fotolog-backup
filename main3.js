@@ -7,7 +7,8 @@ console.time('Elapsed time');
 const fetch = require('node-fetch'),
       cheerio = require('cheerio'),
       fs = require('fs'),
-      request = require('request');
+      request = require('request'),
+      async = require('async');
       // Promise = require('promise'),
       // util = require('util');   // for debugging only
 
@@ -49,9 +50,6 @@ function $fetch(url) {
 
 
 
-
-
-
 (function() {
   
   //var base = 'http://www.fotolog.com/moderaterock/';
@@ -60,14 +58,23 @@ function $fetch(url) {
     
     name: 'moderaterock',
     url: 'http://www.fotolog.com/moderaterock/',
-    
-    // number of posts
-    // posts: 
+    mosaicLoop: 1,
+    backupDone: false,
+    postsAmount: undefined,
     
     backup: function() {
       
       var mosaic_01 = new MosaicPage(1),
-          $promise$Fetch(mosaic_01.url);
+          $promise = $Fetch(mosaic_01.url);
+      
+      $promise.then( $ => {
+        var container = $('.profile_bar_active').get(0),
+            $el = $(container).children().first();
+        Fotolog.postsAmount = parseInt($el.contents());
+      }).catch( error => {
+        console.log('Couldn’t get amount of posts.');
+        console.log(error);
+      });
       
     }
     
@@ -76,7 +83,8 @@ function $fetch(url) {
   function MosaicPage(page) {
     
     this.page = page;
-    this.base = 'http://www.fotolog.com/moderaterock/mosaic/';
+    //this.base = 'http://www.fotolog.com/moderaterock/mosaic/';
+    this.base = Fotolog.url + Fotolog.name + '/mosaic/';
     this.url = this.base + (30 * (this.page - 1)) + '/';
     
   }
@@ -135,7 +143,7 @@ function $fetch(url) {
   // to the Cheerio-object-wrapped response
   function $Fetch(url) {
 
-    var prom = fetch(this.url)
+    var $prom = fetch(this.url)
       .then( response => {
         return response.text;
       })
@@ -143,20 +151,23 @@ function $fetch(url) {
         return cheerio.load(text);
       })
       .catch( err => {
-        console.log('Error fetching' + url);
+        console.log('Error fetching ' + url);
         console.log(err);
       });
 
-    return prom;
+    return $prom;
   }
   
   
-  function getNumberOfPosts($mosaicPromise) {
+  function getAmountOfPosts($mosaicPromise) {
     $mosaicPromise.then( $ => {
-      var container = $('#profile_bar_active').get(0),
+      var container = $('.profile_bar_active').get(0),
           numOfPostsEl = container.children().first();
       return parseInt(numOfPostsEl.contents());
-    })
+    }).catch( error => {
+      console.log('Couldn’t get amount of posts.');
+      console.log(error);
+    });
   }
   
   function backupFotolog() {
@@ -198,7 +209,7 @@ var fotolog = {
 
 
 
-process.on('exit', (code) => {
+process.on('exit', _=> {
   console.timeEnd('Elapsed time');
 });
 
