@@ -16,6 +16,13 @@ Backup all posts from a given Fotolog.
 
 Currently, there are 3 hardcoded posts IDs, for development purposes. Therefore, you should use **moderaterock** as the Fotolog. It’s got 60 posts, so run `node main moderaterock 60`.
 
+##### Useful Fotolog Links
+
+- [moderaterock mosaic page](http://www.fotolog.com/moderaterock/mosaic/)
+- [1st hardcoded post](http://www.fotolog.com/moderaterock/14182234/)
+- [2nd hardcoded post](http://www.fotolog.com/moderaterock/10611508/)
+- [3rd hardcoded post](http://www.fotolog.com/moderaterock/10239857/)
+
 ### External dependencies
 
 - [request](https://www.npmjs.com/package/request)
