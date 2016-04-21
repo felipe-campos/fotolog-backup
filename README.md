@@ -33,5 +33,5 @@ Currently, there are 3 hardcoded posts IDs, for development purposes. Therefore,
 
 - [ ] Finish `backup.js` module
 - [ ] Refactoring
-- [ ] Adress more than 1 post per day
+- [ ] Address more than 1 post per day
 - [ ] Get total amount of posts automatically
