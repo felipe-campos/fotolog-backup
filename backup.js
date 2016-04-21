@@ -97,19 +97,24 @@ function backup(ID) {
     
     // let pictureURI = $('.wall_img_container_big').children().prop('src');
     let pictureURI = $('meta[property="og:image"]')
-      .prop('content'); // console.log(pictureURI);
+      .prop('content'); 
+    console.log(pictureURI);
     
     request(pictureURI).pipe(fs.createWriteStream(picturePath));
+    
+    // this works. something wrong in function createDateDirectory
+    // request(pictureURI).pipe(fs.createWriteStream('foto.jpg'));
     
     
     let description = $('meta[itemprop="description"]')
       .prop('content');
-    console.log('Raw description:');
-    console.log(description);
-    description = description.substring(0, description.length - FOTOLOG.length - 13);
+    /*console.log('Raw description:');
+    console.log(description);*/
+    description = description.substring(0, description.length - FOTOLOG.length - 3);
+    description = description.replace(/\s?(?:<BR>\s)*<BR>$/, '');
     description = description.replace(/\s?<BR>\s<BR>\s?/g, '<BR>');
-    console.log('Cleaned description:');
-    console.log(description);
+    /*console.log('Cleaned description:');
+    console.log(description);*/
     
     fs.writeFile(descriptionPath, description, err => {
       if (err) throw new Error(err.message);
@@ -117,10 +122,10 @@ function backup(ID) {
     });
     
     
-    let comments = $('.flog_img_comments').not('#comment_form')
-      .children('p').get();
-    console.log('Comments:');
-    console.log(comments);
+    /*let comments = $('.flog_img_comments').not('#comment_form')
+      .children('p').get();*/
+    /*console.log('Comments:');
+    console.log(comments);*/
     
   }).catch( error => {
     console.log(error);
@@ -129,7 +134,7 @@ function backup(ID) {
       
   }
   
-  return;    
+  return;   
 }
 
 
