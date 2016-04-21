@@ -6,11 +6,9 @@ const fetch = require('node-fetch'),
 // Fetches URL, wrap it in a Cheerio object and
 // returns a promise to it.
 function $fetcher(url) {
-  return fetch(url).then( response => {
-    return response.text();
-  }).then( text => { 
-    return cheerio.load(text);
-  });
+  return fetch(url)
+    .then( response => response.text() )
+    .then( text => cheerio.load(text) );
 }
 
 module.exports = $fetcher;
