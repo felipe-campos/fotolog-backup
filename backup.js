@@ -92,7 +92,7 @@ function backup(ID) {
         date = $array[2],
         pathdate = path + date; //console.log(date);
     let picturePath = pathdate + '_fotolog_picture.jpg',
-        descriptionPath = pathdate + '_fotolog_post.json',
+        descriptionPath = pathdate + '_fotolog_post.txt',
         commentsPath = pathdate + '_fotolog_comments.json';
     
     // let pictureURI = $('.wall_img_container_big').children().prop('src');
@@ -127,9 +127,7 @@ function backup(ID) {
     /*console.log('Comments:');
     console.log(comments);*/
     
-  }).catch( error => {
-    console.log(error);
-  });
+  }).catch( error => console.log(error) );
     
       
   }
