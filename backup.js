@@ -70,7 +70,10 @@ function createDateDirectory($array) {
 function backup(ID) {
 
   // whilst developing, try just 3 handpicked posts
-  if (ID === '14182234/' || ID === '10611508/' || ID === '10239857/') {
+  if (ID !== '14182234/' && ID !== '10611508/' && ID !== '10239857/') {
+    return;
+  }
+
   return $postFetcher(FOTOLOG, ID, $fetcher)
     .then(getPostDate)
     .then(createDateDirectory)
@@ -112,10 +115,6 @@ function backup(ID) {
 
   }).catch( error => console.log(error) );
     
-      
-  }
-  
-  return;   
 }
 
 
