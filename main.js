@@ -1,6 +1,7 @@
 'use strict';
 
 console.time('Elapsed time');
+process.on('exit', _=> console.timeEnd('Elapsed time'));
 
 const request = require('request');
 
@@ -31,8 +32,3 @@ for (let i = 1; i <= mosaicPagesAmount; i++) {
     .catch( e => console.log(e) );
   
 }
-
-
-process.on('exit', _=> {
-  console.timeEnd('Elapsed time');
-});
