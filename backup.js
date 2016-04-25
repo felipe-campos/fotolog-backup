@@ -2,9 +2,9 @@
 
 const FOTOLOG = process.argv[2],
       $fetcher = require('./$fetcher'),
-      createRelativePath = require('./createRelativePath'),
       fs = require('fs'),
       request = require('request'),
+      mkdir = require("mkdir-promise"),
       MONTH_NAMES = [
         'January', 'February', 'March', 'April', 'May', 'June',  'July', 'August', 'September', 'October', 'November', 'December'
       ];
@@ -64,10 +64,12 @@ function createDateDirectory($array) {
       $ = $array[3];
   
   let date = year + '-' + month + '-' + day,
-      path = './content/' + FOTOLOG + '/' + date + '/',
-      mkDir = Promise.resolve(createRelativePath(path));
-  
-  return Promise.all([$, path, date, mkDir]);
+      path = './content/' + FOTOLOG + '/' + date + '/';
+
+  return mkdir(path)
+    .then( _=> console.log(`Diretório '${path}' criado.`),
+           exception => console.error(exception) )
+    .then( _=> [$, path, date]);
 }
 
 

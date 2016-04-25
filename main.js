@@ -4,7 +4,7 @@ console.time('Elapsed time');
 
 const request = require('request');
 
-const createRelativePath = require('./createRelativePath'),
+const mkdir = require("mkdir-promise"),
       $fetcher = require('./$fetcher'),
       mosaicFetcher = require('./mosaicFetcher'),
       backup = require('./backup');
@@ -15,11 +15,11 @@ const FOTOLOG = process.argv[2],
       mosaicPagesAmount = Math.ceil(postsAmount/30),
       backupPath = './content/' + FOTOLOG + '/';
 
-exports.FOTOLOG = FOTOLOG;
-exports.$fetcher = $fetcher;
 
-
-createRelativePath(backupPath);
+mkdir(backupPath).then(
+  _=> console.log(`Diretório '${backupPath}' OK.`),
+  exception => console.error(exception)
+);
 
 for (let i = 1; i <= mosaicPagesAmount; i++) {
   
