@@ -25,9 +25,10 @@ Currently, there are 3 hardcoded posts IDs, for development purposes. Therefore,
 
 ### External dependencies
 
-- [request](https://www.npmjs.com/package/request)
-- [node-fetch](https://www.npmjs.com/package/node-fetch)
 - [cheerio](https://github.com/cheeriojs/cheerio)
+- [mkdir-promise](https://github.com/zbinlin/mkdir-promise)
+- [node-fetch](https://www.npmjs.com/package/node-fetch)
+- [request](https://www.npmjs.com/package/request)
 
 ### To do
 
