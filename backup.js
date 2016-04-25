@@ -1,7 +1,5 @@
 'use strict';
 
-//const $postFetcher = require('./$postFetcher');
-
 const FOTOLOG = process.argv[2],
       $fetcher = require('./$fetcher'),
       createRelativePath = require('./createRelativePath'),
@@ -12,16 +10,12 @@ const FOTOLOG = process.argv[2],
       ];
 
 
-// Promise to array of objects containing description 
-// data. The objects have `type: 'text'` or `type: 'tag'`.
-// Tags are chiefly <br>, both automatically generated
-// ones and user-inputted ones).
-/*function getDescription($memoizedParent, $) {
-  console.log('getDescription');
-  return Promise.resolve(
-    $('#description_photo', $memoizedParent)
-      .children('p').contents().get());
-}*/
+function $postFetcher(fotolog, ID, fetchFunc) {
+  const base = 'http://www.fotolog.com/' + FOTOLOG + '/';
+  let uri = base + ID;
+
+  return fetchFunc(uri);
+}
 
 
 // Second to last object in `arr` is the automatically
@@ -75,7 +69,6 @@ function createDateDirectory($array) {
   
   return Promise.all([$, path, date, mkDir]);
 }
-// 2004-08-30_fotolog_post.json;
 
 
 
