@@ -1,6 +1,6 @@
 'use strict';
 
-function mosaicFetcher(fotolog, pageNumber, fetchFunc) {
+function getPostsURIsFromMosaic(fotolog, pageNumber, fetchFunc) {
   
   const mosaicBase = 'http://www.fotolog.com/' + fotolog + '/mosaic/';
   let mosaicURI = setMosaicURI(pageNumber);
@@ -28,4 +28,4 @@ function mosaicFetcher(fotolog, pageNumber, fetchFunc) {
 }
 
 
-module.exports = mosaicFetcher;
+module.exports = getPostsURIsFromMosaic;
