@@ -80,26 +80,32 @@ function backUp(URI) {
         descriptionPath = path + 'post.txt',
         commentsPath = path + 'comments.json';
 
-    let pictureURI = $('meta[property="og:image"]').prop('content');
-    // console.log(pictureURI);
 
-    request(pictureURI).pipe(fs.createWriteStream(picturePath));
+    function backPictureUp() {
+      let pictureURI = $('meta[property="og:image"]').prop('content');
+      // console.log(pictureURI);
+      request(pictureURI).pipe(fs.createWriteStream(picturePath));
+    }
 
 
+    function backDescriptionUp() {
+      let descrpt = $('meta[itemprop="description"]').prop('content');
 
-    let descrpt = $('meta[itemprop="description"]').prop('content');
+      //console.log('Raw description:\n${descrpt}');
+      descrpt = descrpt.substring(0, descrpt.length - FOTOLOG.length - 3);
+      descrpt = descrpt.replace(/\s?(?:<BR>\s)*<BR>$/, '');
+      descrpt = descrpt.replace(/\s?<BR>\s<BR>\s?/g, '<BR>');
+      // console.log('Cleaned description:\n${descrpt}');
 
-    //console.log('Raw description:\n${descrpt}');
-    descrpt = descrpt.substring(0, descrpt.length - FOTOLOG.length - 3);
-    descrpt = descrpt.replace(/\s?(?:<BR>\s)*<BR>$/, '');
-    descrpt = descrpt.replace(/\s?<BR>\s<BR>\s?/g, '<BR>');
-    // console.log('Cleaned description:\n${descrpt}');
+      fs.writeFile(descriptionPath, descrpt, err => {
+        if (err) return new Error('Description’s no good.');
+        console.log(descriptionPath + ' saved.');
+      });
+    }
 
-    fs.writeFile(descriptionPath, descrpt, err => {
-      if (err) return new Error('Description’s no good.');
-      console.log(descriptionPath + ' saved.');
-    });
 
+    backPictureUp();
+    backDescriptionUp();
 
     /*let comments = $('.flog_img_comments').not('#comment_form')
       .children('p').get();*/
