@@ -6,7 +6,7 @@ process.on('exit', _=> console.timeEnd('Elapsed time'));
 const request = require('request');
 
 const mkdir = require("mkdir-promise"),
-      $fetcher = require('./$fetcher'),
+      $fetch = require('./$fetch'),
       mosaicFetcher = require('./mosaicFetcher'),
       backup = require('./backup');
 
@@ -27,7 +27,7 @@ for (let i = 1; i <= mosaicPagesAmount; i++) {
   let mosaicPageNumber = i;
   
   //let posts_IDs = mosaicFetcher(mosaicPageNumber)
-  let postsIDs = mosaicFetcher(FOTOLOG, mosaicPageNumber, $fetcher)
+  let postsIDs = mosaicFetcher(FOTOLOG, mosaicPageNumber, $fetch)
     .then( IDs => IDs.forEach(backup) )
     .catch( e => console.log(e) );
   

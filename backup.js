@@ -1,7 +1,7 @@
 'use strict';
 
 const FOTOLOG = process.argv[2],
-      $fetcher = require('./$fetcher'),
+      $fetch = require('./$fetch'),
       fs = require('fs'),
       request = require('request'),
       mkdir = require("mkdir-promise"),
@@ -74,7 +74,7 @@ function backup(ID) {
     return;
   }
 
-  return $postFetcher(FOTOLOG, ID, $fetcher)
+  return $postFetcher(FOTOLOG, ID, $fetch)
     .then(getPostDate)
     .then(createDateDirectory)
     .then( $array => {
