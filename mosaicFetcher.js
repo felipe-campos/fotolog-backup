@@ -18,18 +18,13 @@ function mosaicFetcher(fotolog, pageNumber, fetchFunc) {
   }
   
   // Given the Cheerio wrapped mosaic elements, returns a promise 
-  // to an array containing respective Fotolog posts IDs.
-  function getPostsIDs($el) {
-    let re = /\d+\/$/;
-    return $el.map( (i, el) => {
-      // 'http://www.fotolog.com/<fotologName>/12345678/' ...
-      return (el.attribs.href)
-        .match(re);  // ... store just '12345678/'
-    }).get();  // .get() returns an array with the posts IDs
+  // to an array containing respective Fotolog posts URIs.
+  function getPostsURIs($el) {
+    return $el.map( (i, el) => el.attribs.href ).get();
   }
   return fetchFunc(mosaicURI)
       .then($getMosaicEls)
-      .then(getPostsIDs);
+      .then(getPostsURIs);
 }
 
 
