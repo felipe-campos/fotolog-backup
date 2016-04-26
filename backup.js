@@ -59,7 +59,7 @@ function createDateDirectory($array) {
 
 
 
-function backup(URI) {
+function backUp(URI) {
 
   // whilst developing, try just 3 handpicked posts
   const re = /(?:\d+)(?=\/$)/;
@@ -111,4 +111,4 @@ function backup(URI) {
 }
 
 
-module.exports = backup;
+module.exports = backUp;

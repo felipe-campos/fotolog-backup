@@ -8,7 +8,7 @@ const request = require('request');
 const mkdir = require("mkdir-promise"),
       $fetch = require('./$fetch'),
       getPostsURIsFromMosaic = require('./getPostsURIsFromMosaic'),
-      backup = require('./backup');
+      backUp = require('./backUp');
 
 const FOTOLOG = process.argv[2],
       base  = 'http://www.fotolog.com/' + FOTOLOG + '/',
@@ -27,7 +27,7 @@ for (let i = 1; i <= mosaicPagesAmount; i++) {
   let mosaicPageNumber = i;
   
   let postsURIs = getPostsURIsFromMosaic(mosaicPageNumber)
-    .then( URIs => URIs.forEach(backup) )
+    .then( URIs => URIs.forEach(backUp) )
     .catch( e => console.log(e) );
 
 }
