@@ -89,10 +89,18 @@ function backUp(URI) {
 
     function backDescriptionUp() {
       let descrpt = $('meta[itemprop="description"]').prop('content');
+      const defaultDescrpt = "Fotolog is the world's leading photo-blogging and social networking website.";
 
-      descrpt = descrpt.substring(0, descrpt.length - FOTOLOG.length - 3);
-      descrpt = descrpt.replace(/\s?(?:<BR>\s)*<BR>$/, '');
-      descrpt = descrpt.replace(/\s?<BR>\s<BR>\s?/g, '<BR>');
+      // no description -> don’t save Fotolog’s default text
+      // create an empty file called empty-post.txt instead.
+      if (descrpt === defaultDescrpt) {
+        descrpt = '';
+        descriptionPath = path + 'empty-post.txt';
+      } else {
+        descrpt = descrpt.substring(0, descrpt.length - FOTOLOG.length - 3);
+        descrpt = descrpt.replace(/\s?(?:<BR>\s)*<BR>$/, '');
+        descrpt = descrpt.replace(/\s?<BR>\s<BR>\s?/g, '<BR>');
+      }
 
       fs.writeFile(descriptionPath, descrpt, err => {
         if (err) return new Error('Description’s no good.');
