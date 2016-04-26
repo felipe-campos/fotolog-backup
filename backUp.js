@@ -83,7 +83,6 @@ function backUp(URI) {
 
     function backPictureUp() {
       let pictureURI = $('meta[property="og:image"]').prop('content');
-      // console.log(pictureURI);
       request(pictureURI).pipe(fs.createWriteStream(picturePath));
     }
 
@@ -91,11 +90,9 @@ function backUp(URI) {
     function backDescriptionUp() {
       let descrpt = $('meta[itemprop="description"]').prop('content');
 
-      //console.log('Raw description:\n${descrpt}');
       descrpt = descrpt.substring(0, descrpt.length - FOTOLOG.length - 3);
       descrpt = descrpt.replace(/\s?(?:<BR>\s)*<BR>$/, '');
       descrpt = descrpt.replace(/\s?<BR>\s<BR>\s?/g, '<BR>');
-      // console.log('Cleaned description:\n${descrpt}');
 
       fs.writeFile(descriptionPath, descrpt, err => {
         if (err) return new Error('Description’s no good.');
