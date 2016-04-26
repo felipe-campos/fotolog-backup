@@ -26,8 +26,8 @@ for (let i = 1; i <= mosaicPagesAmount; i++) {
   
   let mosaicPageNumber = i;
   
-  let postsURIs = getPostsURIsFromMosaic(FOTOLOG, mosaicPageNumber, $fetch)
+  let postsURIs = getPostsURIsFromMosaic(mosaicPageNumber)
     .then( URIs => URIs.forEach(backup) )
     .catch( e => console.log(e) );
-  
+
 }
