@@ -54,7 +54,7 @@ function createDateDirectory($array) {
   return mkdir(path)
     .then( _=> console.log(`Diretório '${path}' criado.`),
            exception => console.error(exception) )
-    .then( _=> [$, path, date]);
+    .then( _=> [$, path]);
 }
 
 
@@ -74,9 +74,8 @@ function backup(URI) {
     .then( $array => {
   
     let $ = $array[0],
-        path = $array[1],
-        date = $array[2],
-        pathdate = path + date; //console.log(date);
+        path = $array[1];
+
     let picturePath = path + 'picture.jpg',
         descriptionPath = path + 'post.txt',
         commentsPath = path + 'comments.json';
