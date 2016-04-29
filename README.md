@@ -14,14 +14,14 @@ Backup all posts from a given Fotolog.
 
 `node main <fotolog-name> <total-amount-of-posts>`
 
-Currently, there are 3 hardcoded posts IDs, for development purposes. Therefore, you should use **moderaterock** as the Fotolog. It’s got 60 posts, so run `node main moderaterock 60`.
+e.g. `node main moderaterock 60`
 
 ##### Useful Fotolog Links
 
 - [moderaterock mosaic page](http://www.fotolog.com/moderaterock/mosaic/)
-- [1st hardcoded post](http://www.fotolog.com/moderaterock/14182234/)
-- [2nd hardcoded post](http://www.fotolog.com/moderaterock/10611508/)
-- [3rd hardcoded post](http://www.fotolog.com/moderaterock/10239857/)
+- [typical Fotolog post](http://www.fotolog.com/moderaterock/10239857/)
+- [post with no comments](http://www.fotolog.com/moderaterock/15823889/)
+- [post with no description](http://www.fotolog.com/moderaterock/13854190/)
 
 ### External dependencies
 
@@ -32,7 +32,11 @@ Currently, there are 3 hardcoded posts IDs, for development purposes. Therefore,
 
 ### To do
 
-- [ ] Finish `backup.js` module
-- [ ] Refactoring
-- [ ] Address more than 1 post per day
+- [x] Finish `backup.js` module
+- [x] Basic refactoring
+- [ ] Less straightforward refactoring (e.g. proper error handling)
+- [ ] (Study and) Write some tests
+- [ ] Develop UI for consuming backed up data
+- [ ] Develop UI for inputing data so that people can use app outside CLI
 - [ ] Get total amount of posts automatically
+- [ ] Address more than 1 post per day
