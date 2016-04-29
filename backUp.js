@@ -62,11 +62,11 @@ function createDateDirectory($array) {
 function backUp(URI) {
 
   // whilst developing, try just 3 handpicked posts
-  const re = /(?:\d+)(?=\/$)/;
+  /*const re = /(?:\d+)(?=\/$)/;
   let ID = ( URI.match(re) )[0];
   if (ID !== '14182234' && ID !== '10611508' && ID !== '10239857') {
     return;
-  }
+  }*/
 
   return $fetch(URI)
     .then(getPostDate)
@@ -109,13 +109,57 @@ function backUp(URI) {
     }
 
 
+    function backCommentsUp() {
+      let commentDIVs = $('.flog_img_comments').not('#comment_form');
+      let commentsAmount = commentDIVs.length;
+      let commentsJSON = [];
+
+      if (commentsAmount === 0) {
+        // no comments -> create ‘no-comments.json’ containing []
+        commentsPath = path + 'no-comments.json';
+        saveCommentsJSON(commentsJSON);
+      } else {
+        commentDIVs.each(makeCommentObj);
+      }
+
+      function makeCommentObj(i, el) {
+        let memoized = el.firstChild.nextSibling.childNodes[0].firstChild;
+        let author = memoized.children[0].data;
+        let dateArr = memoized.parent.next.data
+          .trim().substr(3)  /* e.g. '20/01/2005' */
+            .split('/');     /* e.g. ['20', '01', '2005'] */
+        let day = dateArr[0];
+        let month = dateArr[1] - 1;
+        let year = dateArr[2];
+        let pTagContents = el.firstChild.nextSibling.childNodes;
+        let comment = pTagContents.pop().data.trim();
+
+        commentsJSON[i] = {
+          author: author,
+          date: new Date(year, month, day),
+          content: comment
+        };
+
+        if (--commentsAmount === 0) {
+          // Fotolog uses newest to oldest order. That’s rubbish.
+          commentsJSON.reverse();
+          saveCommentsJSON(JSON.stringify(commentsJSON, null, '\t'));
+        };
+      }
+
+      function saveCommentsJSON(commentsJSON) {
+        fs.writeFile(commentsPath, commentsJSON, err => {
+          if (err) return new Error('Comments are no good.');
+          console.log(commentsPath + ' saved.');
+        });
+      }
+
+    }
+
+
     backPictureUp();
     backDescriptionUp();
-
-    /*let comments = $('.flog_img_comments').not('#comment_form')
-      .children('p').get();*/
-    /*console.log('Comments:');
-    console.log(comments);*/
+    backCommentsUp();
 
   }).catch( error => console.log(error) );
     
