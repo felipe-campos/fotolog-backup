@@ -17,7 +17,7 @@ function getPostDate($) {
 
   // "May" -> "05"  ;  "November" -> "11"
   function formatMonthToNumber(monthName) {
-    let monthNum = MONTH_NAMES.indexOf(monthName) + 1;
+    const monthNum = MONTH_NAMES.indexOf(monthName) + 1;
     if (monthNum === 0) return new Error('Month’s no good.');
 
     return ( (monthNum < 10) ? '0' : '' ) + monthNum;
@@ -31,10 +31,11 @@ function getPostDate($) {
       dateStr = dateStr.trim();
       // now, `dateStr` is something like "On May 05 2005"
 
-      let year = dateStr.substr(-4);
-      let day = dateStr.substr(-7, 2);
-      let monthName = dateStr.substring(3, dateStr.length - 8);
-      let month = formatMonthToNumber(monthName);
+      const [year, month, day] = [
+        dateStr.substr(-4),
+        formatMonthToNumber(dateStr.substring(3, dateStr.length - 8)),
+        dateStr.substr(-7, 2)
+      ];
 
       return [$, year, month, day];
   });
@@ -43,12 +44,9 @@ function getPostDate($) {
 
 function createDateDirectory($array) {
 
-  let $ = $array[0],
-      year = $array[1],
-      month = $array[2],
-      day = $array[3];
+const [$, year, month, day] = $array;
 
-  let date = year + '-' + month + '-' + day,
+  const date = year + '-' + month + '-' + day,
       path = './content/' + FOTOLOG + '/' + date + '/';
 
   return mkdir(path)
@@ -72,17 +70,16 @@ function backUp(URI) {
     .then(getPostDate)
     .then(createDateDirectory)
     .then( $array => {
-  
-    let $ = $array[0],
-        path = $array[1];
 
-    let picturePath = path + 'picture.jpg',
-        descriptionPath = path + 'post.txt',
-        commentsPath = path + 'comments.json';
+    const [$, path] = $array;
+
+    let   picturePath     = path + 'picture.jpg',
+          descriptionPath = path + 'post.txt',
+          commentsPath    = path + 'comments.json';
 
 
     function backPictureUp() {
-      let pictureURI = $('meta[property="og:image"]').prop('content');
+      const pictureURI = $('meta[property="og:image"]').prop('content');
       request(pictureURI).pipe(fs.createWriteStream(picturePath));
     }
 
@@ -123,16 +120,16 @@ function backUp(URI) {
       }
 
       function makeCommentObj(i, el) {
-        let memoized = el.firstChild.nextSibling.childNodes[0].firstChild;
-        let author = memoized.children[0].data;
-        let dateArr = memoized.parent.next.data
+        const memoized = el.firstChild.nextSibling.childNodes[0].firstChild;
+        const author = memoized.children[0].data;
+        const dateArr = memoized.parent.next.data
           .trim().substr(3)  /* e.g. '20/01/2005' */
             .split('/');     /* e.g. ['20', '01', '2005'] */
-        let day = dateArr[0];
-        let month = dateArr[1] - 1;
-        let year = dateArr[2];
-        let pTagContents = el.firstChild.nextSibling.childNodes;
-        let comment = pTagContents.pop().data.trim();
+        const day = dateArr[0];
+        const month = dateArr[1] - 1;
+        const year = dateArr[2];
+        const pTagContents = el.firstChild.nextSibling.childNodes;
+        const comment = pTagContents.pop().data.trim();
 
         commentsJSON[i] = {
           author: author,
@@ -141,7 +138,7 @@ function backUp(URI) {
         };
 
         if (--commentsAmount === 0) {
-          // Fotolog uses newest to oldest order. That’s rubbish.
+          // Fotolog uses newest to oldest order. I don’t like it.
           commentsJSON.reverse();
           saveCommentsJSON(JSON.stringify(commentsJSON, null, '\t'));
         };
@@ -162,7 +159,7 @@ function backUp(URI) {
     backCommentsUp();
 
   }).catch( error => console.log(error) );
-    
+
 }
 
 
