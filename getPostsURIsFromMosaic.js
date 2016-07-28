@@ -15,16 +15,17 @@ function getPostsURIsFromMosaic(mosaicPageNumber) {
     return mosaicBase + (30 * (mosaicPageNumber - 1)) + '/';
   }
 
-  // Given a Cheerio wrapped mosaic page, returns a Cherrio object
-  // containing an array of the mosaic elements which are links 
+  // Given a Cheerio-wrapped mosaic page, returns a Cherrio object
+  // containing an array of the mosaic elements which are links
   // to Fotolog posts.
   function $getMosaicEls($) {
     return $('.wall_img_container');
   }
 
-  // Given the Cheerio wrapped mosaic elements, returns a promise 
-  // to an array containing respective Fotolog posts URIs.
+  // Given the Cheerio wrapped mosaic elements, returns an array
+  // containing respective Fotolog posts URIs.
   function getPostsURIs($el) {
+    // Cheerio’s “map” params don’t follow ES’s “map” order
     return $el.map( (i, el) => el.attribs.href ).get();
   }
 
