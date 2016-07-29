@@ -35,7 +35,7 @@ e.g. `node main moderaterock 60`
 - [x] Finish `backup.js` module
 - [x] Basic refactoring
 - [ ] Less straightforward refactoring (e.g. proper error handling)
-- [ ] (Study and) Write some tests
+- [ ] Study and write some tests
 - [ ] Develop UI for consuming backed up data
 - [ ] Develop UI for inputing data so that people can use app outside CLI
 - [ ] Get total amount of posts automatically
